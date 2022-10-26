@@ -1,0 +1,12 @@
+{
+    "folders": [
+      "../../.github/workflows"
+    ],
+    "allowed_categories": [
+      {
+        "path": "../../.github/workflows",
+        "categories":  ["Workflows"]
+      }
+    ]
+  }
+  
