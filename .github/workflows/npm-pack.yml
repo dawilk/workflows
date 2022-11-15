@@ -30,10 +30,10 @@ on:
         default: npm
         description: 'Used to specify a package manager for caching in the default directory. Supported values: npm, yarn, pnpm.'
         type: string
-      # cache-dependency-path:
-      #   default: ./package-lock.json
-      #   description: 'Used to specify the path to a dependency file: package-lock.json, yarn.lock, etc. Supports wildcards or a list of file names for caching multiple dependencies.'
-      #   type: string
+      cache-dependency-path:
+        default: ./package-lock.json
+        description: 'Used to specify the path to a dependency file: package-lock.json, yarn.lock, etc. Supports wildcards or a list of file names for caching multiple dependencies.'
+        type: string
 
       # Configure private registry scope
       # This is only required if you need an additional registry+scope not captured by `registry-url` and `token`
