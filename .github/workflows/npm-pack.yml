@@ -7,9 +7,11 @@ on:
       node-version:
         description: 'Version Spec of the version to use. Examples: 12.x, 10.15.1, >=10.15.0.'
         type: string
+        required: false
       node-version-file:
         description: 'File containing the version Spec of the version to use.  Examples: .nvmrc, .node-version, .tool-versions.'
         type: string
+        required: false
       # architecture:
       #   description: 'Target architecture for Node to use. Examples: x86, x64. Will use system architecture by default.'
       #   type: string
@@ -19,21 +21,26 @@ on:
       registry-url:
         description: 'Optional registry to set up for auth. Will set the registry in a project level .npmrc and .yarnrc file, and set up auth to read in from env.NODE_AUTH_TOKEN.'
         type: string
+        required: false
       scope:
         description: 'Optional scope for authenticating against scoped registries. Will fall back to the repository owner when using the GitHub Packages registry (https://npm.pkg.github.com/).'
         type: string
+        required: false
       token:
         default: ${{ github.token }}
         description: Used to pull node distributions from node-versions.  Since there's a default, this is typically not supplied by the user.
         type: string
+        required: false
       cache:
         default: npm
         description: 'Used to specify a package manager for caching in the default directory. Supported values: npm, yarn, pnpm.'
         type: string
+        required: false
       cache-dependency-path:
         default: ./package-lock.json
         description: 'Used to specify the path to a dependency file: package-lock.json, yarn.lock, etc. Supports wildcards or a list of file names for caching multiple dependencies.'
         type: string
+        required: false
 
       # Configure private registry scope
       # This is only required if you need an additional registry+scope not captured by `registry-url` and `token`
@@ -41,17 +48,21 @@ on:
       private-registry-url:
         description: ''
         type: string
+        required: false
       private-registry-scope:
         description: ''
         type: string
+        required: false
       private-registry-token:
         description: ''
         type: string
+        required: false
 
       cache-modules-path:
         default: ./node_modules
         description: 'Used to specify the node_modules path to cache.'
         type: string
+        required: false
 
       # Env vars for npm executions
       NODE_OPTIONS:
