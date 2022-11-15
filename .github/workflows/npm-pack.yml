@@ -1,0 +1,202 @@
+name: NPM Pack
+
+on:
+  workflow_call:
+    inputs:
+      # setup-node options with some typical defaults
+      node-version:
+        description: 'Version Spec of the version to use. Examples: 12.x, 10.15.1, >=10.15.0.'
+        type: string
+      node-version-file:
+        description: 'File containing the version Spec of the version to use.  Examples: .nvmrc, .node-version, .tool-versions.'
+        type: string
+      # architecture:
+      #   description: 'Target architecture for Node to use. Examples: x86, x64. Will use system architecture by default.'
+      #   type: string
+      # check-latest:
+      #   description: 'Set this option if you want the action to check for the latest available version that satisfies the version spec.'
+      #   default: false
+      registry-url:
+        description: 'Optional registry to set up for auth. Will set the registry in a project level .npmrc and .yarnrc file, and set up auth to read in from env.NODE_AUTH_TOKEN.'
+        type: string
+      scope:
+        description: 'Optional scope for authenticating against scoped registries. Will fall back to the repository owner when using the GitHub Packages registry (https://npm.pkg.github.com/).'
+        type: string
+      token:
+        default: ${{ github.token }}
+        description: Used to pull node distributions from node-versions.  Since there's a default, this is typically not supplied by the user.
+        type: string
+      cache:
+        default: npm
+        description: 'Used to specify a package manager for caching in the default directory. Supported values: npm, yarn, pnpm.'
+        type: string
+      # cache-dependency-path:
+      #   default: ./package-lock.json
+      #   description: 'Used to specify the path to a dependency file: package-lock.json, yarn.lock, etc. Supports wildcards or a list of file names for caching multiple dependencies.'
+      #   type: string
+
+      # Configure private registry scope
+      # This is only required if you need an additional registry+scope not captured by `registry-url` and `token`
+      # To use one, all three are required 
+      private-registry-url:
+        description: ''
+        type: string
+      private-registry-scope:
+        description: ''
+        type: string
+      private-registry-token:
+        description: ''
+        type: string
+
+      cache-modules-path:
+        default: ./node_modules
+        description: 'Used to specify the node_modules path to cache.'
+        type: string
+
+      # Env vars for npm executions
+      NODE_OPTIONS:
+        default: '--max-old-space-size=6144'
+        description: 'Used to set NODE_OPTIONS env var before running npm commands'
+        type: string
+        required: false
+
+      # npm pack behavior
+      working-directory:
+        default: '.'
+        description: 'Directory from which commands execute'
+        type: string
+        required: false
+      package-version:
+        default: ''
+        description: 'Package version (required, and should be automated using Release or semantic-release)'
+        type: string
+        required: true
+      package-prerelease:
+        default: false
+        description: 'Package prerelease packages'
+        type: boolean
+        required: false
+      package-prerelease-tag:
+        default: 'alpha'
+        description: 'Tag used for prerelease packages'
+        type: string
+        required: false
+
+      # GitHub Actions artifact (required to pass the package to subsequent jobs)
+      upload-artifact:
+        default: true
+        description: 'Upload artifact to GitHub Actions'
+        type: boolean
+        required: false
+      artifact-retention-days:
+        default: 3
+        description: 'Artifact retention in days'
+        type: number
+        required: false
+
+    outputs:
+      package-filename:
+        description: "Package filename uploaded to the artifact container"
+        value: ${{ jobs.pack.outputs.package-filename }}
+      package-tag:
+        description: 'Tag for prerelease packages'
+        value: ${{ jobs.pack.outputs.package-tag }}
+      package-version:
+        description: "Artifact version for npm"
+        value: ${{ jobs.version.outputs.package-version }}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  pack:
+    name: NPM Pack
+    runs-on: ubuntu-latest
+    outputs:
+      package-filename: ${{ steps.pack.outputs.package-filename }}
+      package-tag: ${{ steps.pack.outputs.package-tag }}
+      package-version: ${{ steps.version.outputs.package-version }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+        node-version-file: ${{ inputs.node-version-file }}
+        registry-url: ${{ inputs.registry-url }}
+        scope: ${{ inputs.scope }}
+        token: ${{ inputs.token }}
+        cache: ${{ inputs.cache }}
+        # cache-dependency-path: ${{ inputs.cache-dependency-path }}
+
+    - name: Configure NPM Registry Scope
+      if: ${{ inputs.private-registry-url != '' && inputs.private-registry-scope != '' && inputs.private-registry-token != '' }}
+      run: |
+        echo "Configuring scope @${{inputs.private-registry-scope}} (${{inputs.private-registry-url}})"
+        PROTO=$(echo "${{inputs.private-registry-url}}" | sed -rn 's/^(https?):.*/\1/pg')
+        test $PROTO || PROTO="https"
+        URL=$(echo "${{inputs.private-registry-url}}" | sed -rn 's/^(https?:)?//pg')
+        SCOPE=$(echo "${{inputs.private-registry-scope}}" | sed -rn 's/^@(.*)?/@\1/pg')
+        npm config set "$SCOPE":registry $PROTO:$URL
+        npm config set $URL/:_authToken ${{inputs.private-registry-token}}
+
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      id: cache-modules
+      with:
+        path: ${{ inputs.cache-modules-path }}
+        key: modules-${{ hashFiles('package-lock.json') }}
+
+    - name: Install Dependencies
+      if: steps.cache-modules.outputs.cache-hit != 'true'
+      env:
+        NODE_OPTIONS: ${{ inputs.NODE_OPTIONS }}
+      working-directory: ${{ inputs.working-directory }}
+      run: npm ci
+
+    - name: Set Version
+      id: version
+      env:
+        NODE_OPTIONS: ${{ inputs.NODE_OPTIONS }}
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        VERSION="${{inputs.package-version}}"
+        if ${{inputs.package-prerelease}}; then
+          VERSION+="-${{inputs.package-prerelease-tag}}.${{github.run_id}}"
+        fi
+        echo "package-version=$VERSION" >> $GITHUB_OUTPUT
+
+        npm version $VERSION --no-git-tag-version
+
+    - name: NPM Pack
+      id: pack
+      env:
+        NODE_OPTIONS: ${{ inputs.NODE_OPTIONS }}
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        PACKAGE_FILENAME=$(npm pack | tail -n 1)
+
+        if ${{inputs.package-prerelease}}; then
+          PACKAGE_TAG="${{inputs.package-prerelease-tag}}"
+        else
+          PACKAGE_TAG="latest"
+        fi
+
+        echo "### Package Information" >> $GITHUB_STEP_SUMMARY
+        echo "* Filename: $PACKAGE_FILENAME" >> $GITHUB_STEP_SUMMARY
+        echo "* Version: ${{ steps.version.outputs.package-version }}" >> $GITHUB_STEP_SUMMARY
+        echo "* Tag: @ $PACKAGE_TAG" >> $GITHUB_STEP_SUMMARY
+
+        echo "package-filename=$PACKAGE_FILENAME" >> $GITHUB_OUTPUT
+        echo "package-tag=$PACKAGE_TAG" >> $GITHUB_OUTPUT
+
+    - name: Upload Artifact
+      if: ${{ inputs.upload-artifact && steps.pack.outputs.package-filename != '' }}
+      uses: actions/upload-artifact@v3
+      with:
+        retention-days: ${{ inputs.artifact-retention-days }}
+        path: ${{ inputs.working-directory }}/${{ steps.pack.outputs.package-filename }}
+        name: ${{ steps.pack.outputs.package-filename }}

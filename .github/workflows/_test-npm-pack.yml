@@ -1,0 +1,25 @@
+name: test-npm-pack
+
+on:
+  push:
+    paths:
+      - "tests/npm-pack"
+      - ".github/workflows/_test-npm-pack.yml"
+  pull_request:
+
+jobs:
+  pack:
+    strategy:
+      matrix:
+        node-version: [14, 16, 18]
+    name: "Pack"
+    uses: ./.github/workflows/npm-pack.yml
+    secrets: inherit
+    with:
+      node-version: ${{ matrix.node-version }}
+      package-version: '1.0.0'
+      package-prerelease: ${{ github.ref_name != 'main' }}
+      package-prerelease-tag: 'alpha'
+      upload-artifact: true
+      artifact-retention-days: 3
+      NODE_OPTIONS: '--max-old-space-size=6144'
