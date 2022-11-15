@@ -5,6 +5,7 @@ on:
     paths:
       - "tests/npm-pack"
       - ".github/workflows/_test-npm-pack.yml"
+      - ".github/workflows/npm-pack.yml"
   pull_request:
 
 jobs:
