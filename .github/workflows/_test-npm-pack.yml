@@ -16,7 +16,7 @@ jobs:
     uses: ./.github/workflows/npm-pack.yml
     secrets: inherit
     with:
-      working-directory: ./test/npm-pack
+      working-directory: ./tests/npm-pack
       node-version: ${{ matrix.node-version }}
       cache-dependency-path: tests/npm-pack/package-lock.json
       package-version: '1.0.0'
