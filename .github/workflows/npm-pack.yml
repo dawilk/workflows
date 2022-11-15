@@ -130,7 +130,7 @@ jobs:
         scope: ${{ inputs.scope }}
         token: ${{ inputs.token }}
         cache: ${{ inputs.cache }}
-        # cache-dependency-path: ${{ inputs.cache-dependency-path }}
+        cache-dependency-path: ${{ inputs.cache-dependency-path }}
 
     - name: Configure NPM Registry Scope
       if: ${{ inputs.private-registry-url != '' && inputs.private-registry-scope != '' && inputs.private-registry-token != '' }}
