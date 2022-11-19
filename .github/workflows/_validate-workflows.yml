@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: '16'
           cache: 'npm'
-          cache-dependency-path: script/validate-schema/package-lock.json
+          cache-dependency-path: script/validate-workflows/package-lock.json
 
       - name: Validate workflows
         run: |
