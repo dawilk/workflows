@@ -12,6 +12,7 @@ on:
 
 jobs:
   make-docs:
+    name: Make Docs
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -28,8 +29,13 @@ jobs:
 
       - name: Push changes
         run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add docs/*
-          git commit -m 'docs: update docs'
-          git push
+          DOC_CHANGES=$(git diff --name-only | grep "^docs/")
+          if $DOC_CHANGES; then
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git add docs/*
+            git commit -m 'docs: update docs'
+            git push
+          else
+            echo "No doc changes made."
+          fi
