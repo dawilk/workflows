@@ -85,8 +85,8 @@ on:
       
       # GitHub Actions artifact (required to pass the package to subsequent jobs)
       download-artifact:
-        default: true
-        description: 'Upload artifact to GitHub Actions'
+        default: false
+        description: 'Download package artifact from GitHub Actions'
         type: boolean
         required: false
       artifact-name:

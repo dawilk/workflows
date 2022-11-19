@@ -5,7 +5,8 @@ on:
   pull_request:
 
 jobs:
-  validate-data:
+  validate-workflows:
+    name: Validate Workflows
     permissions:
       contents: read
     runs-on: ubuntu-latest
