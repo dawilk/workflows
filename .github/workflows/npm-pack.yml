@@ -46,15 +46,15 @@ on:
       # This is only required if you need an additional registry+scope not captured by `registry-url` and `token`
       # To use one, all three are required 
       private-registry-url:
-        description: ''
+        description: 'Registry Url for private npm registry'
         type: string
         required: false
       private-registry-scope:
-        description: ''
+        description: 'Registry Scope for private npm registry'
         type: string
         required: false
       private-registry-token:
-        description: ''
+        description: 'Registry Token for private npm registry'
         type: string
         required: false
 
