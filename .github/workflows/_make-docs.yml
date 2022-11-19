@@ -30,7 +30,7 @@ jobs:
       - name: Push changes
         run: |
           DOC_CHANGES=$(git diff --name-only | grep "^docs/")
-          if $DOC_CHANGES; then
+          if test "$DOC_CHANGES"; then
             git config user.name github-actions
             git config user.email github-actions@github.com
             git add docs/*
