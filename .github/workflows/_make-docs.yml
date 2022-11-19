@@ -1,0 +1,33 @@
+name: Make Docs
+
+on:
+  push:
+    paths:
+      - "script/make-docs/*"
+      - ".github/workflows/*"
+  pull_request:
+    paths:
+      - "script/make-docs/*"
+      - ".github/workflows/*"
+
+jobs:
+  make-docs:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+
+      - name: Make Docs
+        run: |
+          npm ci
+          npx ts-node-script ./index.ts
+        working-directory: ./script/make-docs
+
+      - name: Push changes
+        run: |
+          git add docs/*
+          git commit -m 'docs: update docs'
+          git push

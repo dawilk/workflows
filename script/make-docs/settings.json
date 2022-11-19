@@ -1,0 +1,35 @@
+{
+  "folders": [
+    "../../.github/workflows"
+  ],
+  "tables": [
+    {
+      "header": "Inputs",
+      "key": "on.workflow_call.inputs",
+      "columns": {
+        "_key": "Input",
+        "type": "Type",
+        "required": "Required",
+        "description": "Description",
+        "default": "Default"
+      }
+    },
+    {
+      "header": "Outputs",
+      "key": "on.workflow_call.outputs",
+      "columns": {
+        "_key": "Output",
+        "description": "Description"
+      }
+    },
+    {
+      "header": "Secrets",
+      "key": "on.workflow_call.secrets",
+      "columns": {
+        "_key": "Secret",
+        "required": "Required",
+        "description": "Description"
+      }
+    }
+  ]
+}
