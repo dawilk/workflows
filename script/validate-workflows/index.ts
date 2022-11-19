@@ -26,6 +26,8 @@ async function checkWorkflows(folders: string[], allowed_categories: object[]): 
         const workflowWithErrors = await checkWorkflow(workflowFilePath, allowed_categories);
         if (workflowWithErrors.errors.length > 0) {
           result.push(workflowWithErrors)
+        } else {
+          console.log("Valid:", e.name)
         }
       }
     }

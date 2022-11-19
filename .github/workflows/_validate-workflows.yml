@@ -23,4 +23,4 @@ jobs:
         run: |
           npm ci
           npx ts-node-script ./index.ts
-        working-directory: ./script/validate-schema
+        working-directory: ./script/validate-workflows
