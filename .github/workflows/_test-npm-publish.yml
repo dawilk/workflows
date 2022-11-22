@@ -46,8 +46,8 @@ jobs:
       NODE_OPTIONS: --max-old-space-size=6144
       working-directory: ./tests/npm-publish
       download-artifact: true
-      artifact-name: ${{ needs.pack.outputs.package-filename }}
-      publish-version: ${{ needs.pack.outputs.package-version }}
+      artifact-name: "test-npm-publish@1.0.${{ matrix.node-version }}-alpha.${{github.run_id}}.tgz"
+      publish-version: ""
       publish-prerelease: ${{ github.ref_name != 'main' }}
       publish-prerelease-tag: ${{ needs.pack.outputs.package-tag }}
       publish-access: public
@@ -59,7 +59,8 @@ jobs:
         node-version: [14, 16, 18]
     name: "Publish"
     uses: ./.github/workflows/npm-publish.yml
-    secrets: inherit
+    secrets:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     with:
       node-version: ${{ matrix.node-version }}
       registry-url: https://npm.pkg.github.com/
