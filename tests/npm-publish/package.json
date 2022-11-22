@@ -1,5 +1,5 @@
 {
-  "name": "test-npm-publish",
+  "name": "@dawilk/test-npm-publish",
   "version": "0.0.0",
   "description": "test solution for workflow",
   "main": "index.js",
