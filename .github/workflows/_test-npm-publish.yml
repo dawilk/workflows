@@ -46,7 +46,7 @@ jobs:
       NODE_OPTIONS: --max-old-space-size=6144
       working-directory: ./tests/npm-publish
       download-artifact: true
-      artifact-name: "test-npm-publish@1.0.${{ matrix.node-version }}-alpha.${{github.run_id}}.tgz"
+      artifact-name: "dawilk-test-npm-publish-1.0.${{ matrix.node-version }}-alpha.${{github.run_id}}.tgz"
       publish-version: ""
       publish-prerelease: ${{ github.ref_name != 'main' }}
       publish-prerelease-tag: ${{ needs.pack.outputs.package-tag }}
