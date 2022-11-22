@@ -226,7 +226,7 @@ jobs:
         NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
         NODE_OPTIONS: ${{ inputs.NODE_OPTIONS }}
       run: |
-        npm publish ${{ github.workspace }}/artifact-${{ github.sha }}/${{ inputs.artifact-name }} --tag $PACKAGE_TAG --access ${{ inputs.publish-access }}
+        npm publish ${{ github.workspace }}/artifact-${{ github.sha }}/${{ inputs.artifact-name }} --tag $PACKAGE_TAG --access ${{ inputs.publish-access }} --dry-run=${{ inputs.publish-dryrun }}
 
     - name: NPM Publish
       if: ${{ !inputs.download-artifact }}
