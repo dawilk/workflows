@@ -21,6 +21,7 @@
 | publish-prerelease     | boolean | false    | Publish prerelease packages                                                                                                                                                | `[undefined]`               |
 | publish-prerelease-tag | string  | false    | Tag for prerelease packages                                                                                                                                                | `alpha`                     |
 | publish-access         | string  | false    | Publish public or restricted (private). Options: public, restricted                                                                                                        | `public`                    |
+| publish-dryrun         | boolean | false    | Do a publish dry-run                                                                                                                                                       | `[undefined]`               |
 ## Secrets
 | Secret          | Required | Description                    |
 | --------------- | -------- | ------------------------------ |
@@ -61,4 +62,5 @@ jobs:
       publish-prerelease: [undefined]
       publish-prerelease-tag: alpha
       publish-access: public
+      publish-dryrun: [undefined]
 ```
