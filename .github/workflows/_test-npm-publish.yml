@@ -56,9 +56,8 @@ jobs:
     strategy:
       matrix:
         node-version: [14, 16, 18]
-    name: "Pack"
+    name: "Publish"
     uses: ./.github/workflows/npm-publish.yml
-    needs: pack
     secrets: inherit
     with:
       node-version: ${{ matrix.node-version }}
