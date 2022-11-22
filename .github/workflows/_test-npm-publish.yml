@@ -63,14 +63,14 @@ jobs:
     with:
       node-version: ${{ matrix.node-version }}
       registry-url: https://npm.pkg.github.com/
-      scope: dawilk
+      # scope: dawilk
       cache: npm
       cache-dependency-path: tests/npm-publish/package-lock.json
       cache-modules-path: ./tests/npm-publish/node_modules
       NODE_OPTIONS: --max-old-space-size=6144
       working-directory: ./tests/npm-publish
       download-artifact: false
-      artifact-name: ${{ needs.pack.outputs.package-filename }}
+      artifact-name: ""
       publish-version: "1.1.${{ matrix.node-version }}"
       publish-prerelease: ${{ github.ref_name != 'main' }}
       publish-prerelease-tag: alpha
