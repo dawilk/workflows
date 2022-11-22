@@ -51,7 +51,7 @@ jobs:
       publish-prerelease: ${{ github.ref_name != 'main' }}
       publish-prerelease-tag: ${{ needs.pack.outputs.package-tag }}
       publish-access: public
-      publish-dryrun: true
+      publish-dryrun: false
 
   publish-nopack:
     strategy:
@@ -63,7 +63,7 @@ jobs:
     with:
       node-version: ${{ matrix.node-version }}
       registry-url: https://npm.pkg.github.com/
-      # scope: dawilk
+      scope: dawilk
       cache: npm
       cache-dependency-path: tests/npm-publish/package-lock.json
       cache-modules-path: ./tests/npm-publish/node_modules
@@ -75,4 +75,4 @@ jobs:
       publish-prerelease: ${{ github.ref_name != 'main' }}
       publish-prerelease-tag: alpha
       publish-access: public
-      publish-dryrun: true
+      publish-dryrun: false
