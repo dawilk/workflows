@@ -34,7 +34,8 @@ jobs:
     name: "Publish (Packed)"
     uses: ./.github/workflows/npm-publish.yml
     needs: pack
-    secrets: inherit
+    secrets:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     with:
       node-version: ${{ matrix.node-version }}
       registry-url: https://npm.pkg.github.com/
