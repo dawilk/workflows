@@ -77,3 +77,12 @@ jobs:
       publish-prerelease-tag: alpha
       publish-access: public
       publish-dryrun: false
+
+  unpublish-packages:
+    name: "Unpublish Packages"
+    needs: [publish-packed, publish-nopack]
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo -n | gh api --method DELETE "users/dawilk/packages/npm/test-npm-publish" --input -
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
