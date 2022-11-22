@@ -235,4 +235,4 @@ jobs:
         NODE_OPTIONS: ${{ inputs.NODE_OPTIONS }}
       working-directory: ${{ inputs.working-directory }}
       run: |
-        npm publish --tag $PACKAGE_TAG --access ${{ inputs.publish-access }} --dry-run=${{ inputs.dry-run }}
+        npm publish --tag $PACKAGE_TAG --access ${{ inputs.publish-access }} --dry-run=${{ inputs.publish-dryrun }}
