@@ -115,6 +115,11 @@ on:
         description: 'Publish public or restricted (private). Options: public, restricted'
         type: string
         required: false
+      publish-dryrun:
+        default: false
+        description: 'Do a publish dry-run'
+        type: boolean
+        required: false
 
 defaults:
   run:
@@ -230,4 +235,4 @@ jobs:
         NODE_OPTIONS: ${{ inputs.NODE_OPTIONS }}
       working-directory: ${{ inputs.working-directory }}
       run: |
-        npm publish --tag $PACKAGE_TAG --access ${{ inputs.publish-access }}
+        npm publish --tag $PACKAGE_TAG --access ${{ inputs.publish-access }} --dry-run=${{ inputs.dry-run }}
