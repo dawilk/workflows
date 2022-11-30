@@ -18,7 +18,7 @@ jobs:
     with:
       dry_run: ${{ github.ref_name != 'main' }}
     concurrency: 
-      group: ${{ github.workflow }}
+      group: 'docs-and-release'
       cancel-in-progress: false
 
   bump-major:
