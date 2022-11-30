@@ -85,4 +85,4 @@ jobs:
     steps:
     - run: echo -n | gh api --method DELETE "users/dawilk/packages/npm/test-npm-publish" --input -
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.NPM_DELETE_TOKEN }}
