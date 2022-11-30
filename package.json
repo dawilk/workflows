@@ -1,0 +1,42 @@
+{
+  "name": "@dawilk/workflows",
+  "version": "0.0.0-managed-by-github-actions",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dawilk/workflows.git"
+  },
+  "scripts": {
+    "prepare": "husky install"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ],
+    "plugins": [
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "preset": "angular",
+          "releaseRules": []
+        }
+      ],
+      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/npm",
+        {
+          "npmPublish": false
+        }
+      ],
+      "@semantic-release/github"
+    ]
+  },
+  "files": [
+    ".github",
+    "docs"
+  ],
+  "devDependencies": {
+    "@commitlint/cli": "^17.2.0",
+    "@commitlint/config-conventional": "^17.2.0",
+    "husky": "^8.0.2"
+  }
+}
