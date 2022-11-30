@@ -181,7 +181,7 @@ jobs:
         fi
         VERSION="${{inputs.publish-version}}"
         if ${{inputs.publish-prerelease}}; then
-          VERSION+="-${{inputs.publish-prerelease-tag}}.${{github.run_id}}"
+          VERSION+="-${{inputs.publish-prerelease-tag}}.${{github.run_number}}.${{github.run_attempt}}"
         fi
         echo "PACKAGE_VERSION=$VERSION" >> $GITHUB_ENV
 

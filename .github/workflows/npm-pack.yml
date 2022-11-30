@@ -176,7 +176,7 @@ jobs:
       run: |
         VERSION="${{inputs.package-version}}"
         if ${{inputs.package-prerelease}}; then
-          VERSION+="-${{inputs.package-prerelease-tag}}.${{github.run_id}}"
+          VERSION+="-${{inputs.package-prerelease-tag}}.${{github.run_number}}.${{github.run_attempt}}"
         fi
         echo "package-version=$VERSION" >> $GITHUB_OUTPUT
 
