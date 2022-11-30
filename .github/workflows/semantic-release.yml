@@ -3,9 +3,6 @@ name: Semantic Release
 on:
   workflow_call:
     secrets:
-      GITHUB_TOKEN:
-        required: true
-        description: "The token used by semantic-release to create a GitHub Release / Tag"
       NODE_AUTH_TOKEN:
         description: 'NPM Token used for publishing to npmjs'
         required: false
