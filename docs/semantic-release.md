@@ -8,10 +8,9 @@
 | ------- | ---------------------------------------------- |
 | version | The version created by semantic-release action |
 ## Secrets
-| Secret          | Required | Description                                                         |
-| --------------- | -------- | ------------------------------------------------------------------- |
-| GITHUB_TOKEN    | true     | The token used by semantic-release to create a GitHub Release / Tag |
-| NODE_AUTH_TOKEN | false    | NPM Token used for publishing to npmjs                              |
+| Secret          | Required | Description                            |
+| --------------- | -------- | -------------------------------------- |
+| NODE_AUTH_TOKEN | false    | NPM Token used for publishing to npmjs |
 ## Usage:
 ### Minimal:
 ```yaml
