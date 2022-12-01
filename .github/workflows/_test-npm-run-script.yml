@@ -48,7 +48,7 @@ jobs:
       download-artifact: true
       download-artifact-unzip: true
       download-artifact-name: build-${{ matrix.node-version }}
-      download-artifact-path: 'dist'
+      download-artifact-path: '.'
       upload-artifact: true
       upload-artifact-zipped: false
       upload-artifact-name: repackage-${{ matrix.node-version }}
