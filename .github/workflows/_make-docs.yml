@@ -16,9 +16,6 @@ jobs:
     permissions:
       contents: write
     runs-on: ubuntu-latest
-    concurrency: 
-      group: 'docs-and-release'
-      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v3
 
@@ -30,15 +27,15 @@ jobs:
           npx ts-node-script ./index.ts
         working-directory: ./script/make-docs
 
-      - name: Push changes
-        run: |
-          git add docs/*
-          DOC_CHANGES=$(git diff --name-only --cached)
-          if test "$DOC_CHANGES"; then
-            git config user.name github-actions
-            git config user.email github-actions@github.com
-            git commit -m 'docs: update docs'
-            git push
-          else
-            echo "No doc changes made."
-          fi
+      # - name: Push changes
+      #   run: |
+      #     git add docs/*
+      #     DOC_CHANGES=$(git diff --name-only --cached)
+      #     if test "$DOC_CHANGES"; then
+      #       git config user.name github-actions
+      #       git config user.email github-actions@github.com
+      #       git commit -m 'docs: update docs'
+      #       git push
+      #     else
+      #       echo "No doc changes made."
+      #     fi

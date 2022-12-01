@@ -1,0 +1,57 @@
+name: test-npm-run-script
+
+on:
+  push:
+    paths:
+      - "tests/npm-run-script/**"
+      - ".github/workflows/_test-npm-run-script.yml"
+      - ".github/workflows/npm-run-script.yml"
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        node-version: [14, 16, 18]
+    name: "Build (${{ matrix.node-version }})"
+    uses: ./.github/workflows/npm-run-script.yml
+    secrets: inherit
+    with:
+      node-version: ${{ matrix.node-version }}
+      cache-dependency-path: tests/npm-run-script/package-lock.json
+      NODE_OPTIONS: --max-old-space-size=6144
+      working-directory: 'tests/npm-run-script'
+      download-artifact: false
+      download-artifact-unzip: false
+      download-artifact-name: build
+      download-artifact-path: .
+      upload-artifact: true
+      upload-artifact-zipped: true
+      upload-artifact-name: build-${{ matrix.node-version }}
+      upload-artifact-path: 'tests/npm-run-script/dist'
+      artifact-retention-days: 3
+      node-script: 'build'
+
+  repackage:
+    strategy:
+      matrix:
+        node-version: [14, 16, 18]
+    name: "Repackage (${{ matrix.node-version }})"
+    needs: build
+    uses: ./.github/workflows/npm-run-script.yml
+    secrets: inherit
+    with:
+      node-version: ${{ matrix.node-version }}
+      cache-dependency-path: tests/npm-run-script/package-lock.json
+      NODE_OPTIONS: --max-old-space-size=6144
+      working-directory: 'tests/npm-run-script'
+      download-artifact: true
+      download-artifact-unzip: true
+      download-artifact-name: build-${{ matrix.node-version }}
+      download-artifact-path: 'tests/npm-run-script/dist'
+      upload-artifact: true
+      upload-artifact-zipped: false
+      upload-artifact-name: repackage-${{ matrix.node-version }}
+      upload-artifact-path: 'tests/npm-run-script/lib'
+      artifact-retention-days: 3
+      node-script: 'repackage'
