@@ -27,15 +27,23 @@ jobs:
           npx ts-node-script ./index.ts
         working-directory: ./script/make-docs
 
-      # - name: Push changes
-      #   run: |
-      #     git add docs/*
-      #     DOC_CHANGES=$(git diff --name-only --cached)
-      #     if test "$DOC_CHANGES"; then
-      #       git config user.name github-actions
-      #       git config user.email github-actions@github.com
-      #       git commit -m 'docs: update docs'
-      #       git push
-      #     else
-      #       echo "No doc changes made."
-      #     fi
+      - name: Wait for Release job
+        uses: lewagon/wait-on-check-action@b666e44 # v1.2.0
+        with:
+          ref: ${{ github.ref }}
+          check-name: 'Release / Semantic Release'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+
+      - name: Push changes
+        run: |
+          git add docs/*
+          DOC_CHANGES=$(git diff --name-only --cached)
+          if test "$DOC_CHANGES"; then
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git commit -m 'docs: update docs'
+            git push
+          else
+            echo "No doc changes made."
+          fi

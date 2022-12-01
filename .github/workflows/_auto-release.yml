@@ -10,39 +10,9 @@ defaults:
     shell: bash
 
 jobs:
-  make-docs:
-    name: Make Docs
-    permissions:
-      contents: write
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-node@v3
-
-      - name: Make Docs
-        run: |
-          npm ci
-          npx ts-node-script ./index.ts
-        working-directory: ./script/make-docs
-
-      - name: Push changes
-        run: |
-          git add docs/*
-          DOC_CHANGES=$(git diff --name-only --cached)
-          if test "$DOC_CHANGES"; then
-            git config user.name github-actions
-            git config user.email github-actions@github.com
-            git commit -m 'docs: update docs'
-            git push
-          else
-            echo "No doc changes made."
-          fi
-
   release:
     name: Release
     if: startsWith(github.ref, 'refs/heads/')
-    needs: make-docs
     uses: ./.github/workflows/semantic-release.yml
     secrets: inherit
     with:

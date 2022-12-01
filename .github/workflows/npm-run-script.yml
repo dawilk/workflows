@@ -163,20 +163,20 @@ jobs:
 
     - name: Download Artifact
       uses: actions/download-artifact@v3
-      if: ${{ inputs.download-artifact && !input.download-artifact-unzip }}
+      if: ${{ inputs.download-artifact && !inputs.download-artifact-unzip }}
       with:
         path: ${{ inputs.download-artifact-path }}
         name: ${{ inputs.download-artifact-name }}
 
     - name: Download Artifact (zipped)
       uses: actions/download-artifact@v3
-      if: ${{ inputs.download-artifact && input.download-artifact-unzip }}
+      if: ${{ inputs.download-artifact && inputs.download-artifact-unzip }}
       with:
         path: '.'
         name: ${{ inputs.artifact-name }}
 
     - name: Unzip Artifact
-      if: ${{ inputs.download-artifact && input.download-artifact-unzip }}
+      if: ${{ inputs.download-artifact && inputs.download-artifact-unzip }}
       run: |
         unzip -qo artifact-${{ github.sha }}.zip -d ${{ inputs.download-artifact-path }}
 
