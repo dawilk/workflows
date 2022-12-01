@@ -28,7 +28,7 @@ jobs:
         working-directory: ./script/make-docs
 
       - name: Wait for Release job
-        uses: lewagon/wait-on-check-action@b666e44 # v1.2.0
+        uses: lewagon/wait-on-check-action@b666e4441cf03c3efea7df0c1b728a7b6dd78e65 # v1.2.0
         with:
           ref: ${{ github.ref }}
           check-name: 'Release / Semantic Release'
