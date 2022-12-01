@@ -48,10 +48,10 @@ jobs:
       download-artifact: true
       download-artifact-unzip: true
       download-artifact-name: build-${{ matrix.node-version }}
-      download-artifact-path: 'tests/npm-run-script/dist'
+      download-artifact-path: 'dist'
       upload-artifact: true
       upload-artifact-zipped: false
       upload-artifact-name: repackage-${{ matrix.node-version }}
-      upload-artifact-path: 'tests/npm-run-script/lib'
+      upload-artifact-path: 'lib'
       artifact-retention-days: 3
       node-script: 'repackage'

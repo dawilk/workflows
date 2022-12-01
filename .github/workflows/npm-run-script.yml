@@ -177,6 +177,7 @@ jobs:
 
     - name: Unzip Artifact
       if: ${{ inputs.download-artifact && inputs.download-artifact-unzip }}
+      working-directory: ${{ inputs.working-directory }}
       run: |
         unzip -qo artifact-${{ github.sha }}.zip -d ${{ inputs.download-artifact-path }}
 
