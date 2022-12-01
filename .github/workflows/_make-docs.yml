@@ -5,10 +5,11 @@ on:
     paths:
       - "script/make-docs/*"
       - ".github/workflows/*"
-  pull_request:
-    paths:
-      - "script/make-docs/*"
-      - ".github/workflows/*"
+  # TODO: consider removing wait for Release job, or run Release dry_run on PRs
+  # pull_request:
+  #   paths:
+  #     - "script/make-docs/*"
+  #     - ".github/workflows/*"
 
 jobs:
   make-docs:
