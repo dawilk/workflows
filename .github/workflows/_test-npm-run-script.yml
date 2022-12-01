@@ -28,7 +28,7 @@ jobs:
       upload-artifact: true
       upload-artifact-zipped: true
       upload-artifact-name: build-${{ matrix.node-version }}
-      upload-artifact-path: 'tests/npm-run-script/dist'
+      upload-artifact-path: 'dist'
       artifact-retention-days: 3
       node-script: 'build'
 
