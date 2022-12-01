@@ -15,11 +15,15 @@
 | cache-modules-path      | string  | false    | Used to specify the node_modules path to cache.                                                                                                                            | `./node_modules`            |
 | NODE_OPTIONS            | string  | false    | Used to set NODE_OPTIONS env var before running npm commands                                                                                                               | `--max-old-space-size=6144` |
 | working-directory       | string  | false    | Directory from which commands execute                                                                                                                                      | `.`                         |
-| upload-artifact         | boolean | false    | Upload artifact to GitHub Actions                                                                                                                                          | `true`                      |
-| artifact-zip            | boolean | false    | Zip artifact before uploading to GitHub Actions                                                                                                                            | `[undefined]`               |
-| artifact-name           | string  | false    | Artifact name when uploaded to GitHub Actions                                                                                                                              | `build`                     |
-| artifact-path           | string  | false    | Artifact path to upload. e.g. "dist" or "build"                                                                                                                            | `''`                        |
-| artifact-retention-days | number  | false    | Artifact retention in days                                                                                                                                                 | `3`                         |
+| download-artifact       | boolean | false    | Download artifact from GitHub Actions (before running script)                                                                                                              | `[undefined]`               |
+| download-artifact-unzip | boolean | false    | Unzip artifact after downloading from GitHub Actions                                                                                                                       | `[undefined]`               |
+| download-artifact-name  | string  | false    | Artifact name to download from GitHub Actions                                                                                                                              | `build`                     |
+| download-artifact-path  | string  | false    | Local path to extract artifact into after downloading. e.g. "dist" or "build"                                                                                              | `.`                         |
+| upload-artifact         | boolean | false    | Upload artifact to GitHub Actions (after running script)                                                                                                                   | `[undefined]`               |
+| upload-artifact-zipped  | boolean | false    | Zip artifact before uploading to GitHub Actions                                                                                                                            | `[undefined]`               |
+| upload-artifact-name    | string  | false    | Artifact name when uploaded to GitHub Actions                                                                                                                              | `build`                     |
+| upload-artifact-path    | string  | false    | Artifact path to upload. e.g. "dist" or "build"                                                                                                                            | `''`                        |
+| artifact-retention-days | number  | false    | Artifact retention in days for uploads                                                                                                                                     | `3`                         |
 | node-script             | string  | true     | custom npm script name to run                                                                                                                                              | `''`                        |
 ## Outputs
 | Output          | Description                                   |
@@ -58,10 +62,14 @@ jobs:
       cache-modules-path: ./node_modules
       NODE_OPTIONS: --max-old-space-size=6144
       working-directory: .
-      upload-artifact: true
-      artifact-zip: [undefined]
-      artifact-name: build
-      artifact-path: ''
+      download-artifact: [undefined]
+      download-artifact-unzip: [undefined]
+      download-artifact-name: build
+      download-artifact-path: .
+      upload-artifact: [undefined]
+      upload-artifact-zipped: [undefined]
+      upload-artifact-name: build
+      upload-artifact-path: ''
       artifact-retention-days: 3
       node-script: ''
 ```
