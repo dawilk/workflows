@@ -8,11 +8,12 @@ on:
       - ".github/workflows/npm-publish.yml"
   pull_request:
 
+concurrency: 
+  group: ${{ github.workflow }}-${{ github.sha }}
+  cancel-in-progress: true
+
 jobs:
   pack:
-    concurrency: 
-      group: ${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true
     strategy:
       matrix:
         node-version: [14, 16, 18]
@@ -31,9 +32,6 @@ jobs:
       NODE_OPTIONS: '--max-old-space-size=6144'
 
   publish-packed:
-    concurrency: 
-      group: ${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true
     strategy:
       matrix:
         node-version: [14, 16, 18]
@@ -60,9 +58,6 @@ jobs:
       publish-dryrun: false
 
   publish-nopack:
-    concurrency: 
-      group: ${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true
     strategy:
       matrix:
         node-version: [14, 16, 18]
