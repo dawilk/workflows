@@ -156,13 +156,6 @@ jobs:
 
     - name: Download Artifact
       uses: actions/download-artifact@v3
-      if: ${{ inputs.download-artifact }}
-      with:
-        path: ${{ github.workspace }}/artifact-${{ github.sha }}
-        name: ${{ inputs.artifact-name }}
-
-    - name: Download Artifact
-      uses: actions/download-artifact@v3
       if: ${{ inputs.download-artifact && !inputs.download-artifact-unzip }}
       with:
         path: ${{ inputs.download-artifact-path }}
