@@ -6,11 +6,6 @@ on:
       - "tests/npm-publish/**"
       - ".github/workflows/_test-npm-publish.yml"
       - ".github/workflows/npm-publish.yml"
-  pull_request:
-
-concurrency: 
-  group: ${{ github.workflow }}
-  cancel-in-progress: false
 
 jobs:
   pack:
