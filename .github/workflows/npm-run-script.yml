@@ -166,7 +166,7 @@ jobs:
       if: ${{ inputs.download-artifact && inputs.download-artifact-unzip }}
       with:
         path: '.'
-        name: ${{ inputs.artifact-name }}
+        name: ${{ inputs.download-artifact-name }}
 
     - name: Unzip Artifact
       if: ${{ inputs.download-artifact && inputs.download-artifact-unzip }}
