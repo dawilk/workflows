@@ -7,6 +7,10 @@ on:
       - ".github/workflows/_test-npm-run-script.yml"
       - ".github/workflows/npm-run-script.yml"
   pull_request:
+    paths:
+      - "tests/npm-run-script/**"
+      - ".github/workflows/_test-npm-run-script.yml"
+      - ".github/workflows/npm-run-script.yml"
 
 jobs:
   build:
