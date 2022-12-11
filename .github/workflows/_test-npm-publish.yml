@@ -1,0 +1,87 @@
+name: test-npm-publish
+
+on:
+  push:
+    paths:
+      - "tests/npm-publish/**"
+      - ".github/workflows/_test-npm-publish.yml"
+      - ".github/workflows/npm-publish.yml"
+
+jobs:
+  pack:
+    strategy:
+      matrix:
+        node-version: [14, 16, 18]
+    name: "Pack"
+    uses: ./.github/workflows/npm-pack.yml
+    secrets: inherit
+    with:
+      working-directory: ./tests/npm-publish
+      node-version: ${{ matrix.node-version }}
+      cache-dependency-path: tests/npm-publish/package-lock.json
+      package-version: '1.0.${{ matrix.node-version }}'
+      package-prerelease: ${{ github.ref_name != 'main' }}
+      package-prerelease-tag: 'alpha'
+      upload-artifact: true
+      artifact-retention-days: 3
+      NODE_OPTIONS: '--max-old-space-size=6144'
+
+  publish-packed:
+    strategy:
+      matrix:
+        node-version: [14, 16, 18]
+    name: "Publish (Packed)"
+    uses: ./.github/workflows/npm-publish.yml
+    needs: pack
+    secrets:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      node-version: ${{ matrix.node-version }}
+      registry-url: https://npm.pkg.github.com/
+      scope: dawilk
+      cache: npm
+      cache-dependency-path: tests/npm-publish/package-lock.json
+      cache-modules-path: ./tests/npm-publish/node_modules
+      NODE_OPTIONS: --max-old-space-size=6144
+      working-directory: ./tests/npm-publish
+      download-artifact: true
+      artifact-name: "dawilk-test-npm-publish-1.0.${{ matrix.node-version }}-alpha.${{github.run_number}}.${{github.run_attempt}}.tgz"
+      publish-version: ""
+      publish-prerelease: ${{ github.ref_name != 'main' }}
+      publish-prerelease-tag: ${{ needs.pack.outputs.package-tag }}
+      publish-access: public
+      publish-dryrun: false
+
+  publish-nopack:
+    strategy:
+      matrix:
+        node-version: [14, 16, 18]
+    name: "Publish"
+    uses: ./.github/workflows/npm-publish.yml
+    secrets:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      node-version: ${{ matrix.node-version }}
+      registry-url: https://npm.pkg.github.com/
+      scope: dawilk
+      cache: npm
+      cache-dependency-path: tests/npm-publish/package-lock.json
+      cache-modules-path: ./tests/npm-publish/node_modules
+      NODE_OPTIONS: --max-old-space-size=6144
+      working-directory: ./tests/npm-publish
+      download-artifact: false
+      artifact-name: ""
+      publish-version: "1.1.${{ matrix.node-version }}"
+      publish-prerelease: ${{ github.ref_name != 'main' }}
+      publish-prerelease-tag: alpha
+      publish-access: public
+      publish-dryrun: false
+
+  unpublish-packages:
+    name: "Unpublish Packages"
+    needs: [publish-packed, publish-nopack]
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo -n | gh api --method DELETE "users/dawilk/packages/npm/test-npm-publish" --input -
+      env:
+        GH_TOKEN: ${{ secrets.NPM_DELETE_TOKEN }}

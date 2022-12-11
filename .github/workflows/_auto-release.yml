@@ -1,0 +1,38 @@
+name: Auto-Release
+
+on:
+  push:
+    paths:
+      - ".github/workflows/*"
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  release:
+    name: Release
+    if: startsWith(github.ref, 'refs/heads/')
+    uses: ./.github/workflows/semantic-release.yml
+    secrets: inherit
+    with:
+      dry_run: ${{ github.ref_name != 'main' }}
+
+  bump-major:
+    name: Bump Major Version to Current
+    if: needs.release.outputs.version != '' && github.ref_name == 'main'
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Set Major Version to the current Release
+      env:
+        VERSION: ${{needs.release.outputs.version}}
+      run: |
+        MAJOR=$(echo "$VERSION" | sed 's/\..*//')
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git tag "v$MAJOR" --force
+        git push --tags --force

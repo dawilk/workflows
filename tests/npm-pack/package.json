@@ -1,0 +1,26 @@
+{
+  "name": "test-npm-pack",
+  "version": "0.0.0",
+  "description": "test solution for workflow",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo Test",
+    "build": "mkdir dist && echo \"build\" > dist/output.txt"
+  },
+  "files": ["dist/*"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dawilk/workflows.git"
+  },
+  "author": "dawilk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dawilk/workflows/issues"
+  },
+  "homepage": "https://github.com/dawilk/workflows#readme",
+  "devDependencies": {
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.0"
+  }
+}

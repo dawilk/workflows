@@ -1,0 +1,50 @@
+name: Make Docs
+
+on:
+  push:
+    paths:
+      - "script/make-docs/*"
+      - ".github/workflows/*"
+  # TODO: consider removing wait for Release job, or run Release dry_run on PRs
+  # pull_request:
+  #   paths:
+  #     - "script/make-docs/*"
+  #     - ".github/workflows/*"
+
+jobs:
+  make-docs:
+    name: Make Docs
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+
+      - name: Make Docs
+        run: |
+          npm ci
+          npx ts-node-script ./index.ts
+        working-directory: ./script/make-docs
+
+      - name: Wait for Release job
+        uses: lewagon/wait-on-check-action@b666e4441cf03c3efea7df0c1b728a7b6dd78e65 # v1.2.0
+        with:
+          ref: ${{ github.ref }}
+          check-name: 'Release / Semantic Release'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+
+      - name: Push changes
+        run: |
+          git add docs/*
+          DOC_CHANGES=$(git diff --name-only --cached)
+          if test "$DOC_CHANGES"; then
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git commit -m 'docs: update docs'
+            git push
+          else
+            echo "No doc changes made."
+          fi

@@ -1,0 +1,24 @@
+{
+  "name": "validate-workflows",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "validate": "npx ts-node-script ./index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dawilk/workflows"
+  },
+  "author": "dawilk",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.11.0",
+    "js-yaml": "^4.1.0",
+    "jsonschema": "^1.4.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.0"
+  }
+}

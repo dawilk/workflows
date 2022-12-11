@@ -1,0 +1,242 @@
+name: NPM Script
+
+on:
+  workflow_call:
+    inputs:
+      # setup-node options with some typical defaults
+      node-version:
+        description: 'Version Spec of the version to use. Examples: 12.x, 10.15.1, >=10.15.0.'
+        type: string
+        required: false
+      node-version-file:
+        description: 'File containing the version Spec of the version to use.  Examples: .nvmrc, .node-version, .tool-versions.'
+        type: string
+        required: false
+      # architecture:
+      #   description: 'Target architecture for Node to use. Examples: x86, x64. Will use system architecture by default.'
+      #   type: string
+      #   required: false
+      # check-latest:
+      #   description: 'Set this option if you want the action to check for the latest available version that satisfies the version spec.'
+      #   default: false
+      #   required: false
+      registry-url:
+        description: 'Optional registry to set up for auth. Will set the registry in a project level .npmrc and .yarnrc file, and set up auth to read in from env.NODE_AUTH_TOKEN.'
+        type: string
+        required: false
+      scope:
+        description: 'Optional scope for authenticating against scoped registries. Will fall back to the repository owner when using the GitHub Packages registry (https://npm.pkg.github.com/).'
+        type: string
+        required: false
+      token:
+        default: ${{ github.token }}
+        description: Used to pull node distributions from node-versions.  Since there's a default, this is typically not supplied by the user.
+        type: string
+        required: false
+      cache:
+        default: npm
+        description: 'Used to specify a package manager for caching in the default directory. Supported values: npm, yarn, pnpm.'
+        type: string
+        required: false
+      cache-dependency-path:
+        default: ./package-lock.json
+        description: 'Used to specify the path to a dependency file: package-lock.json, yarn.lock, etc. Supports wildcards or a list of file names for caching multiple dependencies.'
+        type: string
+        required: false
+
+      # Configure private registry scope
+      # This is only required if you need an additional registry+scope not captured by `registry-url` and `token`
+      # To use one, all three are required 
+      private-registry-url:
+        description: 'Registry Url for private npm registry'
+        type: string
+        required: false
+      private-registry-scope:
+        description: 'Registry Scope for private npm registry'
+        type: string
+        required: false
+      private-registry-token:
+        description: 'Registry Token for private npm registry'
+        type: string
+        required: false
+
+      cache-modules-path:
+        default: ./node_modules
+        description: 'Used to specify the node_modules path to cache.'
+        type: string
+        required: false
+
+      # Env vars for npm executions
+      NODE_OPTIONS:
+        default: '--max-old-space-size=6144'
+        description: 'Used to set NODE_OPTIONS env var before running npm commands'
+        type: string
+        required: false
+
+      working-directory:
+        default: '.'
+        description: 'Directory from which commands execute'
+        type: string
+        required: false
+
+      # GitHub Actions artifact (required to pass the package to subsequent jobs)
+      download-artifact:
+        default: false
+        description: 'Download artifact from GitHub Actions (before running script)'
+        type: boolean
+        required: false
+      download-artifact-unzip:
+        default: false
+        description: 'Unzip artifact after downloading from GitHub Actions'
+        type: boolean
+        required: false
+      download-artifact-name:
+        default: 'build'
+        description: 'Artifact name to download from GitHub Actions'
+        type: string
+        required: false
+      download-artifact-path:
+        default: '.'
+        description: 'Local path to extract artifact into after downloading. e.g. "dist" or "build"'
+        type: string
+        required: false
+
+      # GitHub Actions artifact (required to pass the package to subsequent jobs)
+      upload-artifact:
+        default: false
+        description: 'Upload artifact to GitHub Actions (after running script)'
+        type: boolean
+        required: false
+      upload-artifact-zipped:
+        default: false
+        description: 'Zip artifact before uploading to GitHub Actions'
+        type: boolean
+        required: false
+      upload-artifact-name:
+        default: 'build'
+        description: 'Artifact name when uploaded to GitHub Actions'
+        type: string
+        required: false
+      upload-artifact-path:
+        default: ''
+        description: 'Artifact path to upload. e.g. "dist" or "build"'
+        type: string
+        required: false
+      artifact-retention-days:
+        default: 3
+        description: 'Artifact retention in days for uploads'
+        type: number
+        required: false
+
+      node-script:
+        default: ''
+        description: 'custom npm script name to run'
+        type: string
+        required: true
+
+    outputs:
+      artifact-name:
+        description: "Artifact name uploaded to GitHub Actions"
+        value: ${{ jobs.script.outputs.artifact-name }}
+      artifact-zipped:
+        description: 'Whether the artifact was zipped when uploaded'
+        value: ${{ jobs.script.outputs.artifact-zipped }}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  script:
+    name: NPM Script
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Download Artifact
+      uses: actions/download-artifact@v3
+      if: ${{ inputs.download-artifact && !inputs.download-artifact-unzip }}
+      with:
+        path: ${{ inputs.download-artifact-path }}
+        name: ${{ inputs.download-artifact-name }}
+
+    - name: Download Artifact (zipped)
+      uses: actions/download-artifact@v3
+      if: ${{ inputs.download-artifact && inputs.download-artifact-unzip }}
+      with:
+        path: '.'
+        name: ${{ inputs.download-artifact-name }}
+
+    - name: Unzip Artifact
+      if: ${{ inputs.download-artifact && inputs.download-artifact-unzip }}
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        unzip -qo ${{ github.workspace }}/artifact-${{ github.sha }}.zip -d ${{ inputs.download-artifact-path }}
+
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+        node-version-file: ${{ inputs.node-version-file }}
+        registry-url: ${{ inputs.registry-url }}
+        scope: ${{ inputs.scope }}
+        token: ${{ inputs.token }}
+        cache: ${{ inputs.cache }}
+        cache-dependency-path: ${{ inputs.cache-dependency-path }}
+
+    - name: Configure NPM Registry Scope
+      if: ${{ inputs.private-registry-url != '' && inputs.private-registry-scope != '' && inputs.private-registry-token != '' }}
+      run: |
+        echo "Configuring scope @${{inputs.private-registry-scope}} (${{inputs.private-registry-url}})"
+        PROTO=$(echo "${{inputs.private-registry-url}}" | sed -rn 's/^(https?):.*/\1/pg')
+        test $PROTO || PROTO="https"
+        URL=$(echo "${{inputs.private-registry-url}}" | sed -rn 's/^(https?:)?//pg')
+        SCOPE=$(echo "${{inputs.private-registry-scope}}" | sed -rn 's/^@(.*)?/@\1/pg')
+        npm config set "$SCOPE":registry $PROTO:$URL
+        npm config set $URL/:_authToken ${{inputs.private-registry-token}}
+
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      id: cache-modules
+      with:
+        path: ${{ inputs.working-directory }}/node_modules
+        key: modules-${{ hashFiles('package-lock.json') }} # TODO: this results in a bad cache name for projects without package-lock.json at the root
+
+    - name: Install Dependencies
+      if: steps.cache-modules.outputs.cache-hit != 'true'
+      env:
+        NODE_OPTIONS: ${{ inputs.NODE_OPTIONS }}
+      working-directory: ${{ inputs.working-directory }}
+      run: npm ci
+
+    - name: "NPM Run: ${{ inputs.node-script }}"
+      env:
+        NODE_OPTIONS: ${{ inputs.NODE_OPTIONS }}
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        npm run ${{ inputs.node-script }}
+        echo "artifact-name=${{ inputs.upload-artifact-name }}" >> $GITHUB_OUTPUT
+        echo "artifact-zipped=${{ inputs.upload-artifact-zipped }}" >> $GITHUB_OUTPUT
+
+    - name: Zip Artifact
+      if: ${{ inputs.upload-artifact && inputs.upload-artifact-zipped }}
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        zip -rq ${{ github.workspace }}/artifact-${{ github.sha }}.zip ${{ inputs.upload-artifact-path }}
+
+    - name: Upload Artifact
+      if: ${{ inputs.upload-artifact && !inputs.upload-artifact-zipped }}
+      uses: actions/upload-artifact@v3
+      with:
+        retention-days: ${{ inputs.artifact-retention-days }}
+        path: ${{ inputs.upload-artifact-path }}
+        name: ${{ inputs.upload-artifact-name }}
+
+    - name: Upload Zipped Artifact
+      if: ${{ inputs.upload-artifact && inputs.upload-artifact-zipped }}
+      uses: actions/upload-artifact@v3
+      with:
+        retention-days: ${{ inputs.artifact-retention-days }}
+        path: ${{ github.workspace }}/artifact-${{ github.sha }}.zip
+        name: ${{ inputs.upload-artifact-name }}

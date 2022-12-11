@@ -1,0 +1,32 @@
+name: Validate Workflows
+
+on:
+  push:
+    paths:
+      - ".github/workflows/*"
+      - ./workflows/script/validate-workflows/**"
+  pull_request:
+    paths:
+      - ".github/workflows/*"
+      - ./workflows/script/validate-workflows/**"
+
+jobs:
+  validate-workflows:
+    name: Validate Workflows
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+          cache-dependency-path: script/validate-workflows/package-lock.json
+
+      - name: Validate workflows
+        run: |
+          npm ci
+          npx ts-node-script ./index.ts
+        working-directory: ./script/validate-workflows
