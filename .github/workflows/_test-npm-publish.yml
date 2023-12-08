@@ -28,7 +28,7 @@ jobs:
 
   publish-packed:
     strategy:
-      max-parallel: 1 # multiple attempts to publish a "first" package at the same time will fail 
+      max-parallel: 1 # multiple attempts to publish a "first" package at the same time will fail
       matrix:
         node-version: [14, 16, 18]
     name: "Publish (Packed)"
@@ -55,6 +55,7 @@ jobs:
 
   publish-nopack:
     strategy:
+      max-parallel: 1 # multiple attempts to publish a "first" package at the same time will fail
       matrix:
         node-version: [14, 16, 18]
     name: "Publish"
