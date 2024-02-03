@@ -16,7 +16,7 @@ jobs:
   build:
     strategy:
       matrix:
-        node-version: [14, 16, 18]
+        node-version: [16, 18, 20]
     name: "Build (${{ matrix.node-version }})"
     uses: ./.github/workflows/npm-run-script.yml
     secrets: inherit
@@ -39,7 +39,7 @@ jobs:
   repackage:
     strategy:
       matrix:
-        node-version: [14, 16, 18]
+        node-version: [16, 18, 20]
     name: "Repackage (${{ matrix.node-version }})"
     needs: build
     uses: ./.github/workflows/npm-run-script.yml

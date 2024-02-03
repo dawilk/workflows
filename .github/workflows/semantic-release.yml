@@ -8,7 +8,7 @@ on:
         required: false
     inputs:
       dry_run:
-        default: false
+        default: 'false'
         description: "Only generate next version value; do not create a GitHub Release / Tag"
         type: string
         required: false
@@ -24,6 +24,8 @@ defaults:
 jobs:
   semantic-release:
     name: Semantic Release
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.semantic.outputs.new_release_version }}

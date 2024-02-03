@@ -1,8 +1,8 @@
 # semantic-release
 ## Inputs
-| Input   | Type   | Required | Description                                                            | Default       |
-| ------- | ------ | -------- | ---------------------------------------------------------------------- | ------------- |
-| dry_run | string | false    | Only generate next version value; do not create a GitHub Release / Tag | `[undefined]` |
+| Input   | Type   | Required | Description                                                            | Default |
+| ------- | ------ | -------- | ---------------------------------------------------------------------- | ------- |
+| dry_run | string | false    | Only generate next version value; do not create a GitHub Release / Tag | `false` |
 ## Outputs
 | Output  | Description                                    |
 | ------- | ---------------------------------------------- |
@@ -28,5 +28,5 @@ jobs:
     uses: dawilk/workflows/.github/workflows/semantic-release.yml@v1
     secrets: inherit
     with:
-      dry_run: [undefined]
+      dry_run: false
 ```
