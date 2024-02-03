@@ -130,10 +130,10 @@ jobs:
       package-version: ${{ steps.version.outputs.package-version }}
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup Node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ inputs.node-version }}
         node-version-file: ${{ inputs.node-version-file }}
@@ -155,7 +155,7 @@ jobs:
         npm config set $URL/:_authToken ${{inputs.private-registry-token}}
 
     - name: Cache dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       id: cache-modules
       with:
         path: ${{ inputs.cache-modules-path }}
@@ -206,7 +206,7 @@ jobs:
 
     - name: Upload Artifact
       if: ${{ inputs.upload-artifact && steps.pack.outputs.package-filename != '' }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         retention-days: ${{ inputs.artifact-retention-days }}
         path: ${{ inputs.working-directory }}/${{ steps.pack.outputs.package-filename }}
