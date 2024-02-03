@@ -24,6 +24,8 @@ defaults:
 jobs:
   semantic-release:
     name: Semantic Release
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.semantic.outputs.new_release_version }}
