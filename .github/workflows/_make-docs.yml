@@ -32,7 +32,7 @@ jobs:
         uses: lewagon/wait-on-check-action@595dabb3acf442d47e29c9ec9ba44db0c6bdd18f # v1.3.3
         with:
           ref: ${{ github.ref }}
-          check-name: 'Release / Semantic Release'
+          check-name: 'Auto-Release / Release / Semantic Release'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 10
 
