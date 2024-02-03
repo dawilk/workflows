@@ -46,7 +46,7 @@ jobs:
       NODE_OPTIONS: --max-old-space-size=6144
       working-directory: ./tests/npm-publish
       download-artifact: true
-      artifact-name: "dawilk-test-npm-publish-1.0.${{ matrix.node-version }}-alpha.${{github.run_number}}.${{github.run_attempt}}.tgz"
+      artifact-name: "dawilk-test-npm-publish-1.0.${{ matrix.node-version }}${{github.ref_name != 'main' && '-alpha.' || ''}}${{github.ref_name != 'main' && github.run_number || ''}}${{github.ref_name != 'main' && '.' || ''}}${{github.ref_name != 'main' && github.run_attempt || ''}}.tgz"
       publish-version: ""
       publish-prerelease: ${{ github.ref_name != 'main' }}
       publish-prerelease-tag: ${{ needs.pack.outputs.package-tag }}
@@ -81,6 +81,7 @@ jobs:
 
   unpublish-packages:
     name: "Unpublish Packages"
+    if: always()
     needs: [publish-packed, publish-nopack]
     runs-on: ubuntu-latest
     steps:
