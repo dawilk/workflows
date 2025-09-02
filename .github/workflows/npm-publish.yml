@@ -131,7 +131,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Setup Node
       uses: actions/setup-node@v4
@@ -214,7 +214,7 @@ jobs:
         echo "* Tag: @ $PACKAGE_TAG" >> $GITHUB_STEP_SUMMARY
 
     - name: Download Artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v5
       if: ${{ inputs.download-artifact }}
       with:
         path: ${{ github.workspace }}/artifact-${{ github.sha }}
