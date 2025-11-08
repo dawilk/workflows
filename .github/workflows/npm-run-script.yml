@@ -152,17 +152,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Download Artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v6
       if: ${{ inputs.download-artifact && !inputs.download-artifact-unzip }}
       with:
         path: ${{ inputs.download-artifact-path }}
         name: ${{ inputs.download-artifact-name }}
 
     - name: Download Artifact (zipped)
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v6
       if: ${{ inputs.download-artifact && inputs.download-artifact-unzip }}
       with:
         path: '.'
@@ -175,7 +175,7 @@ jobs:
         unzip -qo ${{ github.workspace }}/artifact-${{ github.sha }}.zip -d ${{ inputs.download-artifact-path }}
 
     - name: Setup Node
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version: ${{ inputs.node-version }}
         node-version-file: ${{ inputs.node-version-file }}
@@ -227,7 +227,7 @@ jobs:
 
     - name: Upload Artifact
       if: ${{ inputs.upload-artifact && !inputs.upload-artifact-zipped }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         retention-days: ${{ inputs.artifact-retention-days }}
         path: ${{ inputs.upload-artifact-path }}
@@ -235,7 +235,7 @@ jobs:
 
     - name: Upload Zipped Artifact
       if: ${{ inputs.upload-artifact && inputs.upload-artifact-zipped }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         retention-days: ${{ inputs.artifact-retention-days }}
         path: ${{ github.workspace }}/artifact-${{ github.sha }}.zip
