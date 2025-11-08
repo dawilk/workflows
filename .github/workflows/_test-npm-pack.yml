@@ -16,7 +16,7 @@ jobs:
   pack:
     strategy:
       matrix:
-        node-version: [16, 18, 20]
+        node-version: ${{ fromJson(vars.NODE_VERSIONS) }}
     name: "Pack"
     uses: ./.github/workflows/npm-pack.yml
     secrets: inherit

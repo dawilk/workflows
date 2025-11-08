@@ -11,7 +11,7 @@ jobs:
   pack:
     strategy:
       matrix:
-        node-version: [16, 18, 20]
+        node-version: ${{ fromJson(vars.NODE_VERSIONS) }}
     name: "Pack"
     uses: ./.github/workflows/npm-pack.yml
     secrets: inherit
@@ -30,7 +30,7 @@ jobs:
     strategy:
       max-parallel: 1 # multiple attempts to publish a "first" package at the same time will fail
       matrix:
-        node-version: [16, 18, 20]
+        node-version: ${{ fromJson(vars.NODE_VERSIONS) }}
     name: "Publish (Packed)"
     uses: ./.github/workflows/npm-publish.yml
     needs: pack
@@ -57,7 +57,7 @@ jobs:
     strategy:
       max-parallel: 1 # multiple attempts to publish a "first" package at the same time will fail
       matrix:
-        node-version: [16, 18, 20]
+        node-version: ${{ fromJson(vars.NODE_VERSIONS) }}
     name: "Publish"
     uses: ./.github/workflows/npm-publish.yml
     secrets:
