@@ -130,10 +130,10 @@ jobs:
       package-version: ${{ steps.version.outputs.package-version }}
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Setup Node
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version: ${{ inputs.node-version }}
         node-version-file: ${{ inputs.node-version-file }}
@@ -206,7 +206,7 @@ jobs:
 
     - name: Upload Artifact
       if: ${{ inputs.upload-artifact && steps.pack.outputs.package-filename != '' }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         retention-days: ${{ inputs.artifact-retention-days }}
         path: ${{ inputs.working-directory }}/${{ steps.pack.outputs.package-filename }}
