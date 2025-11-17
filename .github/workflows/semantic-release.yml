@@ -40,7 +40,7 @@ jobs:
       run: echo "GITHUB_BRANCH=$(echo $GITHUB_REF | sed 's/refs\/heads\///g')" >> $GITHUB_ENV
 
     - name: Semantic Release
-      uses: cycjimmy/semantic-release-action@v5
+      uses: cycjimmy/semantic-release-action@v6
       id: semantic
       with:
         branches: ${{ env.GITHUB_BRANCH }}
