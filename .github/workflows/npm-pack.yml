@@ -130,7 +130,7 @@ jobs:
       package-version: ${{ steps.version.outputs.package-version }}
     steps:
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     - name: Setup Node
       uses: actions/setup-node@v6
@@ -155,7 +155,7 @@ jobs:
         npm config set $URL/:_authToken ${{inputs.private-registry-token}}
 
     - name: Cache dependencies
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       id: cache-modules
       with:
         path: ${{ inputs.cache-modules-path }}
