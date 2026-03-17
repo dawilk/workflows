@@ -206,7 +206,7 @@ jobs:
 
     - name: Upload Artifact
       if: ${{ inputs.upload-artifact && steps.pack.outputs.package-filename != '' }}
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         retention-days: ${{ inputs.artifact-retention-days }}
         path: ${{ inputs.working-directory }}/${{ steps.pack.outputs.package-filename }}
