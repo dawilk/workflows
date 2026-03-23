@@ -155,14 +155,14 @@ jobs:
       uses: actions/checkout@v6
 
     - name: Download Artifact
-      uses: actions/download-artifact@v7
+      uses: actions/download-artifact@v8
       if: ${{ inputs.download-artifact && !inputs.download-artifact-unzip }}
       with:
         path: ${{ inputs.download-artifact-path }}
         name: ${{ inputs.download-artifact-name }}
 
     - name: Download Artifact (zipped)
-      uses: actions/download-artifact@v7
+      uses: actions/download-artifact@v8
       if: ${{ inputs.download-artifact && inputs.download-artifact-unzip }}
       with:
         path: '.'
@@ -227,7 +227,7 @@ jobs:
 
     - name: Upload Artifact
       if: ${{ inputs.upload-artifact && !inputs.upload-artifact-zipped }}
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         retention-days: ${{ inputs.artifact-retention-days }}
         path: ${{ inputs.upload-artifact-path }}
@@ -235,7 +235,7 @@ jobs:
 
     - name: Upload Zipped Artifact
       if: ${{ inputs.upload-artifact && inputs.upload-artifact-zipped }}
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         retention-days: ${{ inputs.artifact-retention-days }}
         path: ${{ github.workspace }}/artifact-${{ github.sha }}.zip
