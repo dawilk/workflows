@@ -22,10 +22,10 @@ jobs:
     name: Bump Major Version to Current
     if: needs.release.outputs.version != '' && github.ref_name == 'main'
     needs: release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
     - name: Checkout
-      uses: actions/checkout@v6
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
     - name: Set Major Version to the current Release
       env:
